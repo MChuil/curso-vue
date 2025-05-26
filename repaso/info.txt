@@ -1,0 +1,19 @@
+¿Cuanto debes saber de JS para  iniciar en Vue?
+ - Variables
+ - Constantes
+ - Tipos de datos
+ - Manejo de objetos
+ - Desestructuración
+ - Template String
+ - Arrays
+ - Array functions
+ - Array Methods
+ - Operadores de comparación, logicos
+ - Operador ternario
+ - Manejo del DOM
+ - Eventos
+ - Validaciòn  de formularios
+ - Promesas
+ - Fetch
+ - Async Await
+ - Arrow Function
