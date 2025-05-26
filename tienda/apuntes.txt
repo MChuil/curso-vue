@@ -1,0 +1,50 @@
+API Styles
+    Options API - Version 2 en adelante
+        Define la logica del componente utilizando sintaxis de objeto
+
+    Composition API - Version 2.7 en adelante
+
+State (estado)
+    Funciones son: reactive y ref, ambas se importan de Vue
+    Solo estan disponibles con Composition API
+
+    State con Reactive
+        Siempre sera un objeto
+        ejemplo:
+            import { reactive } from 'vue';
+
+            const book = reactive({
+                title: 'Vue.js Essentials',
+                price: 29.99,
+                stock: 20
+            });
+
+            console.log("Titulo", book.title)
+            console.log("Precio", book.price)
+            console.log("Existencia", book.stock)
+
+    State con Ref
+        const products = ref([]);
+        const customer = ref({});
+        const msj = ref('Saludos desde Vue.js');
+        const code = ref(0);
+        const auth = ref(false);
+        console.log("Mensaje", msj);
+
+        auth.value = true
+
+
+Directivas de Vues
+    Siempre inician con v y se insertan como HTML
+        v-text
+        v-html
+        v-show
+        v-if
+        v-else
+        v-else-if
+        v-for
+        v-on
+        v-bind
+        v-model
+        v-once
+        v-memo
