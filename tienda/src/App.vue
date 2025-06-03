@@ -1,19 +1,24 @@
 <script setup>
-  import { reactive, ref, onMounted } from 'vue';
-  import { db } from './data/productos';
-  import Header from './components/Header.vue';
-  import Footer from './components/Footer.vue';
-  
-  const productos = ref([]);
+    import { reactive, ref, onMounted } from 'vue';
+    import { db } from './data/productos';
+    import Header from './components/Header.vue';
+    import Footer from './components/Footer.vue';
+    import Producto from './components/Producto.vue';
 
+    const productos = ref([]); //creando un state
+    // const number = ref(0);
   // const state = reactive({
   //   productos: [],
   // })
   
-  onMounted(()=>{
-    productos.value = db;
-     // state.productos = db;
-  })
+    const addProduct = (producto)=>{
+        console.log("Agregando..." + producto);
+    }
+
+    onMounted(()=>{
+        productos.value = db;
+        // state.productos = db;
+    })
 
 </script>
 
@@ -67,16 +72,11 @@
         <!-- Grid de Productos -->
         <section class="products-grid">
             <!-- Producto 1 -->
-            <div v-for="producto in productos" class="product-card">
-                <img :src="'/img/' + producto.imagen" alt="Producto" class="product-image">
-                <div class="product-info">
-                    <div class="product-title">{{ producto.nombre }}</div>
-                    <div class="product-price">${{ producto.precio}}</div>
-                    <div>{{ producto.descripcion }}</div>
-                    <div class="product-rating">★★★★★</div>
-                    <button class="add-to-cart">Añadir al carrito</button>
-                </div>
-            </div>           
+            <Producto 
+                v-for="producto in productos"
+                :producto = "producto"
+                @add-product = "addProduct"
+            />
         </section>
     </main>
     
@@ -151,3 +151,9 @@
     <!-- Pie de página -->
     <Footer />
 </template>
+
+
+<!-- 
+    Crear un nuevo State (carrito) para manejar el carrito de compras
+    y poder agregar productos al carrito desde el componente Producto.vue
+-->
