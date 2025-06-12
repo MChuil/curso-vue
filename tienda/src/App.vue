@@ -4,16 +4,28 @@
     import Header from './components/Header.vue';
     import Footer from './components/Footer.vue';
     import Producto from './components/Producto.vue';
+    import Carrito from './components/Carrito.vue';
 
     const productos = ref([]); //creando un state
-    // const number = ref(0);
-  // const state = reactive({
-  //   productos: [],
-  // })
-  
+    const carrito = ref([]);
+    const estadoCarrito = ref(false);
+
     const addProduct = (producto)=>{
-        console.log("Agregando..." + producto);
+        producto.cantidad = 1;
+        carrito.value.push(producto);
+        console.log('Carrito:', carrito.value);
     }
+
+    const abrirCarrito = () =>{
+        estadoCarrito.value = true;
+        console.log('Carrito abierto');
+    }
+    
+    const cerrarCarrito = () =>{
+        estadoCarrito.value = false;
+        console.log('Carrito cerrado');
+    }
+    
 
     onMounted(()=>{
         productos.value = db;
@@ -23,7 +35,10 @@
 </script>
 
 <template>
-    <Header />
+    <Header 
+        @abrir-carrito="abrirCarrito"
+        :totalProductos = "carrito.length"
+    />
     <main class="container">
         <!-- Hero Section -->
         <section class="hero">
@@ -81,79 +96,8 @@
     </main>
     
     <!-- Carrito de compras (oculto por defecto) -->
-    <div class="cart-overlay" id="cartOverlay">
-        <div class="cart-container">
-            <div class="cart-header">
-                <h2>Tu Carrito</h2>
-                <button class="close-cart" id="closeCart">×</button>
-            </div>
-            
-            <div class="cart-items">
-                <!-- Artículo en el carrito -->
-                <div class="cart-item">
-                    <img src="./img/deportivos.jpg" alt="Producto" class="item-image">
-                    <div class="item-details">
-                        <div class="item-title">Zapatos Deportivos Premium</div>
-                        <div class="item-price">$89.99</div>
-                        <div class="item-actions">
-                            <div class="quantity-selector">
-                                <button class="quantity-btn">-</button>
-                                <input type="text" class="quantity-input" value="1">
-                                <button class="quantity-btn">+</button>
-                            </div>
-                            <button class="remove-btn">Eliminar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Segundo artículo -->
-                <div class="cart-item">
-                    <img src="./img/camiseta.jpg" alt="Producto" class="item-image">
-                    <div class="item-details">
-                        <div class="item-title">Camiseta de Algodón</div>
-                        <div class="item-price">$29.99</div>
-                        <div class="item-actions">
-                            <div class="quantity-selector">
-                                <button class="quantity-btn">-</button>
-                                <input type="text" class="quantity-input" value="2">
-                                <button class="quantity-btn">+</button>
-                            </div>
-                            <button class="remove-btn">Eliminar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="cart-summary">
-                <div class="summary-title">Resumen de Compra</div>
-                <div class="summary-row">
-                    <span>Subtotal (3 productos)</span>
-                    <span>$149.97</span>
-                </div>
-                <div class="summary-row">
-                    <span>Envío</span>
-                    <span>Gratis</span>
-                </div>
-                <div class="summary-row">
-                    <span>Descuento</span>
-                    <span>-$0.00</span>
-                </div>
-                <div class="summary-row summary-total">
-                    <span>Total</span>
-                    <span>$149.97</span>
-                </div>
-                
-                <button class="checkout-btn">Proceder al Pago</button>
-            </div>
-        </div>
-    </div>
+    <Carrito />
     
     <!-- Pie de página -->
     <Footer />
 </template>
-
-
-<!-- 
-    Crear un nuevo State (carrito) para manejar el carrito de compras
-    y poder agregar productos al carrito desde el componente Producto.vue
--->

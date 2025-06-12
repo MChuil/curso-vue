@@ -1,4 +1,13 @@
 <script setup>
+    const props = defineProps({
+            totalProductos: {
+                type: Number,
+                required: true
+            }
+
+        }
+    );
+    defineEmits('abrir-carrito');
 </script>
 
 <template>
@@ -11,9 +20,12 @@
                 <a href="#">Ofertas</a>
                 <a href="#">Contacto</a>
             </nav>
-            <div class="cart-icon" id="cartIcon">
+            <div 
+                class="cart-icon" 
+                id="cartIcon"
+                @click="$emit('abrir-carrito')">
                 🛒
-                <span class="cart-count">3</span>
+                <span class="cart-count" v-if="totalProductos > 0">{{ totalProductos }}</span>
             </div>
         </div>
     </header>
