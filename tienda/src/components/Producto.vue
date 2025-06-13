@@ -11,7 +11,7 @@
 
 </script>
 
-
+ 
 <template>
     <div class="product-card">
         <img :src="'/img/' + producto.imagen" :alt="producto.nombre" class="product-image">

@@ -96,7 +96,13 @@
     </main>
     
     <!-- Carrito de compras (oculto por defecto) -->
-    <Carrito />
+    <Carrito 
+    v-if="estadoCarrito"
+    :estadoCarrito="estadoCarrito"
+    :cerrarCarrito="cerrarCarrito"
+    :carrito="carrito"
+    />
+
     
     <!-- Pie de página -->
     <Footer />

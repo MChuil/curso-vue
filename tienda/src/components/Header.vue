@@ -7,7 +7,7 @@
 
         }
     );
-    defineEmits('abrir-carrito');
+    defineEmits(['abrir-carrito']); //estaba como string
 </script>
 
 <template>

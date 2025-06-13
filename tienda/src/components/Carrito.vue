@@ -1,6 +1,8 @@
 <script setup>
-
+const props = defineProps(['estadoCarrito', 'cerrarCarrito', 'carrito']);
 </script>
+
+
 <template>
     <div class="cart-overlay" id="cartOverlay" v-if="estadoCarrito">
         <div class="cart-container">
