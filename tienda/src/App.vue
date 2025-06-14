@@ -11,9 +11,28 @@
     const estadoCarrito = ref(false);
 
     const addProduct = (producto)=>{
-        producto.cantidad = 1;
-        carrito.value.push(producto);
+        const existe = carrito.value.findIndex(row => row.id == producto.id);
+        if(existe >= 0){ //ya existe
+            carrito.value[existe].cantidad += 1;
+        }else{ //no existe
+            producto.cantidad = 1;
+            carrito.value.push(producto);
+        }
+        
         console.log('Carrito:', carrito.value);
+    }
+
+    const decrementar = (id)=>{
+        const index = carrito.value.findIndex(row => row.id == id);
+        //TODO: tarea
+        //no permitir valores negativos
+        //al llegar a cero eliminar el producto
+        carrito.value[index].cantidad--;
+    }
+    
+    const incrementar = (id) =>{
+        const index = carrito.value.findIndex(row => row.id == id);
+        carrito.value[index].cantidad++;
     }
 
     const abrirCarrito = () =>{
@@ -32,6 +51,7 @@
         // state.productos = db;
     })
 
+    //TODO: Obtener el total a pagar
 </script>
 
 <template>
@@ -97,11 +117,13 @@
     
     <!-- Carrito de compras (oculto por defecto) -->
     <Carrito 
-    v-if="estadoCarrito"
-    :estadoCarrito="estadoCarrito"
-    :cerrarCarrito="cerrarCarrito"
-    :carrito="carrito"
-    />
+        v-if="estadoCarrito"
+        :estadoCarrito="estadoCarrito"
+        :carrito="carrito"
+        @cerrar-carrito="cerrarCarrito"
+        @incrementar = "incrementar"
+        @decrementar = "decrementar"
+        />
 
     
     <!-- Pie de página -->
