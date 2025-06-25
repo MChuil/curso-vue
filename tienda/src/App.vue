@@ -18,32 +18,34 @@
             producto.cantidad = 1;
             carrito.value.push(producto);
         }
-        
-        console.log('Carrito:', carrito.value);
+        guardarStorage();
     }
 
-   const decrementar = (id) => {
-    const index = carrito.value.findIndex(p => p.id === id);
-    if (index !== -1) {
-        if (carrito.value[index].cantidad > 1) {
-        carrito.value[index].cantidad--;
-        } else {
-       
-        carrito.value.splice(index, 1);
+    const decrementar = (id) => {
+        const index = carrito.value.findIndex(p => p.id === id);
+        if (index !== -1) {
+            if (carrito.value[index].cantidad > 1) {
+                carrito.value[index].cantidad--;
+            } else {
+                carrito.value.splice(index, 1);
+            }
         }
-    }
+        guardarStorage();
     };
     
     const incrementar = (id) =>{
         const index = carrito.value.findIndex(row => row.id == id);
         carrito.value[index].cantidad++;
+        guardarStorage();
     }
 
     const eliminarProducto = (id) => {
-        const index = carrito.value.findIndex(p => p.id === id);
-        if (index !== -1) {
-            carrito.value.splice(index, 1);
-        }
+        // const index = carrito.value.findIndex(p => p.id === id);
+        // if (index !== -1) {
+        //     carrito.value.splice(index, 1);
+        // }
+        carrito.value = carrito.value.filter(producto => producto.id !== id );
+        guardarStorage();
     };
 
 
@@ -60,10 +62,16 @@
 
     onMounted(()=>{
         productos.value = db;
-        // state.productos = db;
-    })
+        const carritoStorage = localStorage.getItem('carrito');
+        if(carritoStorage){
+            carrito.value = JSON.parse(carritoStorage);
+        }
+    });
 
-    //TODO: Obtener el total a pagar
+    const guardarStorage = ()=>{
+        localStorage.setItem('carrito', JSON.stringify(carrito.value));
+    }
+
 </script>
 
 <template>

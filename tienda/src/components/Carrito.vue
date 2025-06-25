@@ -1,4 +1,5 @@
 <script setup>
+    import { computed } from 'vue';
     // const props = defineProps(['estadoCarrito', 'carrito']);
     const props = defineProps({
         estadoCarrito:{
@@ -12,6 +13,11 @@
     });
 
     defineEmits(['cerrar-carrito', 'decrementar', 'incrementar','eliminar']);
+
+    const totalPago = computed(() =>{
+        return props.carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
+    });
+
 </script>
 
 
@@ -70,7 +76,7 @@
                     <div class="summary-title">Resumen de Compra</div>
                     <div class="summary-row">
                         <span>Subtotal (3 productos)</span>
-                        <span>$149.97</span>
+                        <span>${{ totalPago.toFixed(2) }}</span>
                     </div>
                     <div class="summary-row">
                         <span>Envío</span>
@@ -82,7 +88,7 @@
                     </div> -->
                     <div class="summary-row summary-total">
                         <span>Total</span>
-                        <span>$149.97</span>
+                        <span>$ {{ totalPago.toFixed(2) }}</span>
                     </div>
 
                     <button class="checkout-btn">Proceder al Pago</button>
