@@ -22,18 +22,30 @@
         console.log('Carrito:', carrito.value);
     }
 
-    const decrementar = (id)=>{
-        const index = carrito.value.findIndex(row => row.id == id);
-        //TODO: tarea
-        //no permitir valores negativos
-        //al llegar a cero eliminar el producto
+   const decrementar = (id) => {
+    const index = carrito.value.findIndex(p => p.id === id);
+    if (index !== -1) {
+        if (carrito.value[index].cantidad > 1) {
         carrito.value[index].cantidad--;
+        } else {
+       
+        carrito.value.splice(index, 1);
+        }
     }
+    };
     
     const incrementar = (id) =>{
         const index = carrito.value.findIndex(row => row.id == id);
         carrito.value[index].cantidad++;
     }
+
+    const eliminarProducto = (id) => {
+        const index = carrito.value.findIndex(p => p.id === id);
+        if (index !== -1) {
+            carrito.value.splice(index, 1);
+        }
+    };
+
 
     const abrirCarrito = () =>{
         estadoCarrito.value = true;
@@ -123,6 +135,7 @@
         @cerrar-carrito="cerrarCarrito"
         @incrementar = "incrementar"
         @decrementar = "decrementar"
+        @eliminar="eliminarProducto"
         />
 
     

@@ -11,7 +11,7 @@
         } 
     });
 
-    defineEmits(['cerrar-carrito', 'decrementar', 'incrementar']);
+    defineEmits(['cerrar-carrito', 'decrementar', 'incrementar','eliminar']);
 </script>
 
 
@@ -54,7 +54,13 @@
                                 </div>
                                 <!-- TODO -->
                                 <!-- Hacer que funciones btn eliminar -->
-                                <button class="remove-btn">Eliminar</button>
+                                <button
+                                    class="remove-btn"
+                                    @click="$emit('eliminar', producto.id)"
+                                    >Eliminar
+                                </button>
+
+                                
                             </div>
                         </div>
                     </div>
