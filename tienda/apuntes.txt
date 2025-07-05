@@ -48,3 +48,15 @@ Directivas de Vues
         v-model
         v-once
         v-memo
+
+
+LO QUE PRENDIMOS
+- Componentes
+- Custom Events
+- Directivas
+- State
+- Props
+- Watch
+- Eventos
+- Emits
+- Computed

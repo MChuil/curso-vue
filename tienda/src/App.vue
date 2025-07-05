@@ -1,5 +1,5 @@
 <script setup>
-    import { reactive, ref, onMounted } from 'vue';
+    import { reactive, ref, onMounted, watch } from 'vue';
     import { db } from './data/productos';
     import Header from './components/Header.vue';
     import Footer from './components/Footer.vue';
@@ -10,6 +10,12 @@
     const carrito = ref([]);
     const estadoCarrito = ref(false);
 
+    watch(carrito, ()=> {
+        saveStorage();
+    },{
+        deep:true
+    });
+
     const addProduct = (producto)=>{
         const existe = carrito.value.findIndex(row => row.id == producto.id);
         if(existe >= 0){ //ya existe
@@ -18,7 +24,6 @@
             producto.cantidad = 1;
             carrito.value.push(producto);
         }
-        guardarStorage();
     }
 
     const decrementar = (id) => {
@@ -30,13 +35,11 @@
                 carrito.value.splice(index, 1);
             }
         }
-        guardarStorage();
     };
     
     const incrementar = (id) =>{
         const index = carrito.value.findIndex(row => row.id == id);
         carrito.value[index].cantidad++;
-        guardarStorage();
     }
 
     const eliminarProducto = (id) => {
@@ -45,7 +48,6 @@
         //     carrito.value.splice(index, 1);
         // }
         carrito.value = carrito.value.filter(producto => producto.id !== id );
-        guardarStorage();
     };
 
 
@@ -68,7 +70,7 @@
         }
     });
 
-    const guardarStorage = ()=>{
+    const saveStorage = ()=>{
         localStorage.setItem('carrito', JSON.stringify(carrito.value));
     }
 
