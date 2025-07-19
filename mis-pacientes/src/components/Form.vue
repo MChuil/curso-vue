@@ -42,6 +42,10 @@
         dataAlert.mensaje = 'Datos guardados correctamente';
         dataAlert.tipo = 'green';
         emit('guardar-paciente');
+
+        setTimeout(()=>{
+            dataAlert.mensaje = '';
+        }, 2000)
     }
 </script>
 <template>
