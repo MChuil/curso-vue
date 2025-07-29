@@ -45,6 +45,11 @@ const actualizarPaciente = (id)=>{
   Object.assign(mascota, pacienteEditar);
 }
 
+const eliminarPaciente = (id) => {
+  pacientes.value = pacientes.value.filter(paciente => paciente.id !== id);
+}
+
+
 </script>
 
 <template>
@@ -58,6 +63,7 @@ const actualizarPaciente = (id)=>{
         v-model:email="mascota.email"
         v-model:date="mascota.date"
         v-model:symptoms="mascota.symptoms"
+        v-model:id="mascota.id"
         @guardar-paciente="guardarPaciente"
       />
 
@@ -72,8 +78,10 @@ const actualizarPaciente = (id)=>{
           </p>
           <Pacientes 
             v-for="paciente in pacientes"
+            :key="paciente.id"
             :paciente="paciente"
             @actualizar-paciente="actualizarPaciente"
+            @eliminar-paciente="eliminarPaciente"
           />
         </div>
         

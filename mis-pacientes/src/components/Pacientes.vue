@@ -5,7 +5,8 @@
             required: true
         }
     });
-    defineEmits(['actualizar-paciente']);
+defineEmits(['actualizar-paciente', 'eliminar-paciente']);
+
 </script>
 <template>
     
@@ -55,8 +56,10 @@
             >Editar</button>
             <button
             type="button"
-            class="block w-full py-2 bg-red-600 hover:bg-red-700 text-white font-bold upperacase rounded-lg"
+            class="block w-full py-2 bg-red-600 hover:bg-red-700 text-white font-bold uppercase rounded-lg"
+            @click="$emit('eliminar-paciente', paciente.id)"
             >Eliminar</button>
+
         </div>
     </div>
 </template>

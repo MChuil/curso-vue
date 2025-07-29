@@ -27,6 +27,10 @@
         symptoms: {
             type: String,
             required: true
+        },
+         id: {
+            type: String,
+            default: null
         }
     });
 
@@ -96,9 +100,10 @@
                     :value="symptoms"
                     ></textarea>
             </div>
-            <input type="submit"
+            <input 
+                type="submit"
                 class="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-800 hover:cursor-pointer transition-colors"
-                value="Agregar Paciente">
+                :value="id ? 'Editar Paciente' : 'Agregar Paciente'"/>
         </form>
     </div>
 </template>
