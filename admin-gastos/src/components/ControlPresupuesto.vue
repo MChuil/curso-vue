@@ -1,5 +1,18 @@
 <script setup>
-    import grafico from '../assets/img/grafico.jpg'
+    import grafico from '../assets/img/grafico.jpg';
+    import { formatearMoneda } from '../helpers';
+
+    const props = defineProps({
+        presupuesto: {
+            type: Number,
+            required: true
+        },
+        disponible:{
+            type: Number,
+            required: true
+        }
+    })
+
 </script>
 <template>
     <div class="dos-columnas">
@@ -15,17 +28,17 @@
             >Resetear App</button>
             <p>
                 <span>Presupuesto:</span>
-                $0
+                {{ formatearMoneda(presupuesto)}}
             </p>
 
             <p>
                 <span>Disponible:</span>
-                $0
+                {{ formatearMoneda(disponible)  }}
             </p>
 
             <p>
                 <span>Gastado:</span>
-                $0
+                {{ formatearMoneda(0)  }}
             </p>
         </div>
     </div>
