@@ -5,6 +5,7 @@ import ControlPresupuesto from './components/ControlPresupuesto.vue';
 import icoNuevoGasto from './assets/img/nuevo-gasto.svg';
 import Modal from './components/Modal.vue';
 import { generarId } from './helpers';
+import Gasto from './components/Gasto.vue'; 
 
 
 const modal = reactive({
@@ -47,11 +48,22 @@ const ocultarModal = () => {
 
 const guardarGasto = ()=>{
   gasto.id = generarId();
-  gastos.value.push({...gasto})
+  gastos.value.push({...gasto});
   console.log(gastos.value);
+  limpiarGasto();
+  ocultarModal();
 }
 
-//Pendientes: 1. Limpiar el state de gasto, 2 cerrar modal
+
+const limpiarGasto =()=>{
+  gasto.nombre = '';
+  gasto.cantidad = '';
+  gasto.categoria = '';
+  gasto.id= null;
+  gasto.fecha = Date.now();
+}
+
+// Pendientes: 1. Limpiar el state de gasto, 2 cerrar modal
 
 </script>
 
@@ -73,6 +85,16 @@ const guardarGasto = ()=>{
   </header>
 
   <main v-if="presupuesto > 0">
+
+    <div class="listado-gastos contenedor">
+        <h2>{{ gastos.length > 0 ? 'Gastos': 'No hay gastos'}} </h2>
+        
+        <Gasto
+          v-for = "gasto in gastos"
+          :ke="gasto.id"
+          :gasto= "gasto"
+        />
+    </div>
     <div class="crear-gasto">
       <img 
         :src="icoNuevoGasto" 
@@ -80,6 +102,8 @@ const guardarGasto = ()=>{
         @click="mostrarModal"
         >
     </div>
+
+
 
     <Modal
       v-if ="modal.mostrar"
@@ -170,5 +194,13 @@ header h1{
   cursor: pointer;
 }
 
-  
+.listado-gastos{
+  margin-top: 45px;
+}
+
+.listado-gastos h2{
+  font-weight: 900;
+  color: var(--gris-oscuro)
+}
 </style>
+|
