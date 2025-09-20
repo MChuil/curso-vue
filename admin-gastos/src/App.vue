@@ -1,5 +1,5 @@
 <script setup>
-import {  ref, reactive } from 'vue';
+import {  ref, reactive, watch } from 'vue';
 import Presupuesto from './components/Presupuesto.vue';
 import ControlPresupuesto from './components/ControlPresupuesto.vue';
 import icoNuevoGasto from './assets/img/nuevo-gasto.svg';
@@ -15,6 +15,7 @@ const modal = reactive({
 
 const presupuesto = ref(0);
 const disponible = ref(0);
+const gastado = ref(0);
 
 const gasto = reactive({
   nombre:'',
@@ -25,6 +26,13 @@ const gasto = reactive({
 });
 
 const gastos = ref([]);
+
+watch(gastos, () => {
+  const totalGastado = gastos.value.reduce((total, gastos) => gastos.cantidad + total, 0);
+  gastado.value = totalGastado;
+},{
+  deep: true
+})
 
 
 const definirPresupuesto =(cantidad)=>{
@@ -63,8 +71,6 @@ const limpiarGasto =()=>{
   gasto.fecha = Date.now();
 }
 
-// Pendientes: 1. Limpiar el state de gasto, 2 cerrar modal
-
 </script>
 
 <template>
@@ -80,6 +86,7 @@ const limpiarGasto =()=>{
         v-else
         :presupuesto="presupuesto"
         :disponible="disponible"
+        :gastado="gastado"
         />
     </div>
   </header>
@@ -91,7 +98,7 @@ const limpiarGasto =()=>{
         
         <Gasto
           v-for = "gasto in gastos"
-          :ke="gasto.id"
+          :key="gasto.id"
           :gasto= "gasto"
         />
     </div>
@@ -102,8 +109,6 @@ const limpiarGasto =()=>{
         @click="mostrarModal"
         >
     </div>
-
-
 
     <Modal
       v-if ="modal.mostrar"

@@ -1,12 +1,23 @@
 <script setup>
+import { formatearMoneda, formatearFecha } from '../helpers';
+import IconoAhorro from '../assets/img/icono_ahorro.svg';
+import IconoCasa from '../assets/img/icono_casa.svg';
+import IconoComida from '../assets/img/icono_comida.svg';
+import IconoOcio from '../assets/img/icono_ocio.svg';
+import IconoSalud from '../assets/img/icono_salud.svg';
+import IconoSuscripciones from '../assets/img/icono_suscripciones.svg';
 
+const diccionarioIconos = {
+    ahorro: IconoAhorro,
+    casa: IconoCasa,
+    comida: IconoComida,
+    ocio: IconoOcio,
+    salud: IconoSalud,
+    suscripciones: IconoSuscripciones
+}
 
 const props = defineProps({
-    /*
-      - Check out official docs at: https://github.com/openai/openai-node
-      - Check out https://github.com/microsoft/generative-ai-with-javascript, for a fun free course on how to use GenAi, it has time traveling :)
-    */
-   gasto: {
+    gasto: {
         type: Object,
         reqired: true
     }
@@ -16,19 +27,63 @@ const props = defineProps({
 
 <template>
     <div class="gasto sombra">
+        <img :src="diccionarioIconos[gasto.categoria]" 
+            alt="Icono gasto"
+            class="icono">
         <div class="contenido">
             <div class="detalles">
                 <p class="categoria"> {{  gasto.categoria }}</p>
                 <p class="nombre"> {{  gasto.nombre }}</p>
-                <p class="fecha"> {{  gasto.fecha }}</p>
+                <p class="fecha"> {{  formatearFecha(gasto.fecha) }}</p>
             </div>
         </div>
-        <p class="cantidad"> {{  gasto.cantidad }}</p>
-
+        <p class="cantidad"> {{  formatearMoneda(gasto.cantidad) }}</p>
     </div>
 </template>
 
 
 <style lang="scss" scoped>
+    .gasto{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+    }
+    .contenido{
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+    .icono{
+        width: 5rem;
+    }
+
+    .detalles p{
+        margin: 0 0 1rem 0;
+    }
+
+    .categoria{
+        font-size: 1.2rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        color: var(--gris);
+    }
+    .nombre{
+        color: var(--gris-oscuro);
+        font-size: 2.5rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+    .fecha{
+        color: var(--gris-oscuro);
+        font-weight: 900;
+        font-size: 1.6rem;
+    }
+
+    .cantidad{
+        font-size: 3rem;
+        font-weight: 900;
+        margin: 0;
+    }
 
 </style>

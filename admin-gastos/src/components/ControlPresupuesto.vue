@@ -10,6 +10,10 @@
         disponible:{
             type: Number,
             required: true
+        },
+        gastado:{
+            type: Number,
+            required: true
         }
     })
 
@@ -38,7 +42,7 @@
 
             <p>
                 <span>Gastado:</span>
-                {{ formatearMoneda(0)  }}
+                {{ formatearMoneda(gastado)  }}
             </p>
         </div>
     </div>
