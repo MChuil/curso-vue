@@ -29,7 +29,17 @@ const gastos = ref([]);
 
 watch(gastos, () => {
   const totalGastado = gastos.value.reduce((total, gastos) => gastos.cantidad + total, 0);
-  gastado.value = totalGastado;
+  gastado.value = totalGastado;  //pasamos el total gastado
+  //actualizamos el disponible
+  disponible.value = presupuesto.value - totalGastado;
+},{
+  deep: true
+})
+
+watch(modal, ()=>{
+  if(!modal.mostrar){
+    limpiarStateGasto();
+  }
 },{
   deep: true
 })
@@ -55,20 +65,44 @@ const ocultarModal = () => {
 }
 
 const guardarGasto = ()=>{
-  gasto.id = generarId();
-  gastos.value.push({...gasto});
+  if(gasto.id){ // editar
+    const { id } = gasto;
+    //buscar la posicion del gasto
+    const index = gastos.value.findIndex(gasto => gasto.id === id);
+    gastos.value[index] = {...gasto}; //agregamos en esa posicion el gasto editado
+  }else{ // nuevo
+    gasto.id = generarId();
+    gastos.value.push({...gasto});
+  }
   console.log(gastos.value);
-  limpiarGasto();
   ocultarModal();
 }
 
 
-const limpiarGasto =()=>{
-  gasto.nombre = '';
-  gasto.cantidad = '';
-  gasto.categoria = '';
-  gasto.id= null;
-  gasto.fecha = Date.now();
+const limpiarStateGasto =()=>{
+  Object.assign(gasto, {
+    nombre:'',
+    cantidad:'',
+    categoria:'',
+    id: null,
+    fecha: Date.now()
+  });
+
+  // gasto.nombre = '';
+  // gasto.cantidad = '';
+  // gasto.categoria = '';
+  // gasto.id= null;
+  // gasto.fecha = Date.now();
+
+}
+
+const seleccionarGasto = (id) =>{
+  //buscar el gasto
+  const gastoEditar = gastos.value.filter(gasto => gasto.id === id);
+  //asignar los valores
+  Object.assign(gasto, gastoEditar[0]);
+  //mostrar el modal
+  mostrarModal();
 }
 
 </script>
@@ -87,6 +121,7 @@ const limpiarGasto =()=>{
         :presupuesto="presupuesto"
         :disponible="disponible"
         :gastado="gastado"
+        
         />
     </div>
   </header>
@@ -100,6 +135,7 @@ const limpiarGasto =()=>{
           v-for = "gasto in gastos"
           :key="gasto.id"
           :gasto= "gasto"
+          @seleccionar-gasto="seleccionarGasto"
         />
     </div>
     <div class="crear-gasto">
@@ -115,6 +151,8 @@ const limpiarGasto =()=>{
       @ocultar-modal="ocultarModal"
       @guardar-gasto="guardarGasto"
       :modal="modal"
+      :disponible="disponible"
+      :id="gasto.id"
       v-model:nombre = "gasto.nombre"
       v-model:cantidad = "gasto.cantidad"
       v-model:categoria = "gasto.categoria"

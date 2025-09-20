@@ -1,5 +1,5 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import cerrarModal from '../assets/img/cerrar.svg';
     import Alert from './Alert.vue';
 
@@ -23,12 +23,22 @@
         categoria:{
             type: String,
             required: true
+        },
+        disponible:{
+            type: Number,
+            required: true
+        },
+        id:{
+            type: [String, null],
+            required: true
         }
     });
 
+    const oldCantidad = props.cantidad;  //90
+
     const agregarGasto = () => {
         //validar que no vengan vacios los campos
-        const{ nombre, cantidad, categoria } = props;
+        const{ nombre, cantidad, categoria, disponible, id } = props;
         if([nombre, cantidad, categoria].includes('')){
             error.value ='Todos los campos son obligatorios';
             setTimeout(()=>{
@@ -47,10 +57,31 @@
         }
 
         //validar que tenga presupuesto
+        if(id){ //edicion
+            if(cantidad > (oldCantidad + disponible)){
+                error.value = 'Has excedido el presupuesto';
+                setTimeout(()=>{
+                    error.value = '';
+                }, 3000)
+                return;
+            }
+        }else{ //nuevo
+            if(cantidad > disponible){ 
+                error.value = 'Has excedido el presupuesto';
+                setTimeout(()=>{
+                    error.value = '';
+                }, 3000)
+                return;
+            }
+        }
 
         emits('guardar-gasto');
 
     };
+
+    const isEditando = computed(() => {
+        return props.id
+    });
 </script>
 
 
@@ -116,6 +147,14 @@
 
                 <input type="submit" value="Añadir Gasto">
             </form>
+
+            <button
+                type="button"
+                class="btnEliminar"
+                v-if="isEditando"
+            >
+                Eliminar Gasto
+            </button>
         </div>
     </div>
 </template>
@@ -238,5 +277,19 @@
 
     .nuevo-gasto input[type="submit"]:hover {
         background-color: #1048A4;
+    }
+
+    .btnEliminar{
+        border: none;
+        border-radius: 10px;
+        padding: 1rem;
+        width: 100%;
+        background-color: red;
+        font-weight: 700;
+        color: white;
+        font-size: 1.7rem;
+        text-transform: uppercase;
+        margin-top: 10px;
+        cursor: pointer;
     }
 </style>
