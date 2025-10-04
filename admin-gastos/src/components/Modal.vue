@@ -5,7 +5,7 @@
 
     const error = ref('')
 
-    const emits = defineEmits(['ocultar-modal', 'update:nombre', 'update:cantidad', 'update:categoria', 'guardar-gasto']);
+    const emits = defineEmits(['ocultar-modal', 'update:nombre', 'update:cantidad', 'update:categoria', 'guardar-gasto', 'eliminar-gasto']);
     
     const props = defineProps({
         modal: {

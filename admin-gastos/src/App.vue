@@ -1,11 +1,12 @@
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch, computed, onMounted } from 'vue';
 import Presupuesto from './components/Presupuesto.vue';
 import ControlPresupuesto from './components/ControlPresupuesto.vue';
 import icoNuevoGasto from './assets/img/nuevo-gasto.svg';
 import Modal from './components/Modal.vue';
 import { generarId } from './helpers';
 import Gasto from './components/Gasto.vue'; 
+import Filter from './components/Filter.vue';
 
 
 const modal = reactive({
@@ -29,16 +30,18 @@ const gasto = reactive({
 const gastos = ref([]);
 const categoriaSeleccionada = ref('');
 
-const gastosFiltrados = computed(() => {
-  if (!categoriaSeleccionada.value) return gastos.value;
-  return gastos.value.filter(gasto => gasto.categoria === categoriaSeleccionada.value);
-});
+
+
+watch(presupuesto, ()=>{
+  localStorage.setItem('presupesto', presupuesto.value)
+})
 
 watch(gastos, () => {
   const totalGastado = gastos.value.reduce((total, gastos) => gastos.cantidad + total, 0);
   gastado.value = totalGastado;  //pasamos el total gastado
   //actualizamos el disponible
   disponible.value = presupuesto.value - totalGastado;
+  localStorage.setItem('gastos', JSON.stringify(gastos.value));
 },{
   deep: true
 })
@@ -51,6 +54,24 @@ watch(modal, ()=>{
   deep: true
 })
 
+onMounted(()=>{
+  const miPresupuesto = localStorage.getItem('presupesto');
+  if(miPresupuesto){
+    presupuesto.value = Number(miPresupuesto);
+    disponible.value = Number(miPresupuesto);
+  }
+
+  const misGastos = localStorage.getItem('gastos');
+  if(misGastos){
+    gastos.value = JSON.parse(misGastos);
+  }
+})
+
+const gastosFiltrados = computed(() => {
+  console.log(categoriaSeleccionada.value)
+  if (!categoriaSeleccionada.value) return gastos.value;
+  return gastos.value.filter(gasto => gasto.categoria === categoriaSeleccionada.value);
+});
 
 const definirPresupuesto =(cantidad)=>{
   presupuesto.value = cantidad;
@@ -88,11 +109,16 @@ const guardarGasto = ()=>{
 
 const eliminarGasto = () => {
   if(gasto.id){
-    const index = gastos.value.findIndex(item => item.id === gasto.id);
-    if(index !== -1) {
-      gastos.value.splice(index, 1);
+    if(confirm('¿Deseas eliminar este gasto?')){
+      const index = gastos.value.findIndex(item => item.id === gasto.id);
+      if(index !== -1) {
+        gastos.value.splice(index, 1);
+      }
+
+      //gastos.value = gastos.value.filter(gastoState => gastoState.id !== gasto.id);
+
+      ocultarModal();
     }
-    ocultarModal();
   }
 }
 
@@ -122,6 +148,15 @@ const seleccionarGasto = (id) =>{
   mostrarModal();
 }
 
+
+const resetApp = ()=>{
+  if(confirm('¿Deseas reiniciar presupuesto y gastos?')){
+    gastos.value = [];
+    presupuesto.value = 0;
+    disponible.value = 0;
+    localStorage.clear();
+  }
+}
 </script>
 
 <template>
@@ -138,7 +173,7 @@ const seleccionarGasto = (id) =>{
         :presupuesto="presupuesto"
         :disponible="disponible"
         :gastado="gastado"
-        
+        @reset-app="resetApp"
         />
     </div>
   </header>
@@ -146,9 +181,14 @@ const seleccionarGasto = (id) =>{
   <main v-if="presupuesto > 0">
 
     <div class="listado-gastos contenedor">
+        <Filter 
+          v-if="gastos.length > 0"
+          v-model:filtro="categoriaSeleccionada"
+        />
+
         <h2>{{ gastos.length > 0 ? 'Gastos': 'No hay gastos'}} </h2>
         <!-- Filtro de categoría -->
-        <div style="margin-bottom: 2rem;">
+        <!-- <div style="margin-bottom: 2rem;" v-if="gastos.length > 0">
           <label for="filtro-categoria" style="font-weight: bold;">Filtrar por Categoría:</label>
           <select id="filtro-categoria" v-model="categoriaSeleccionada">
               <option value="">Todas</option>
@@ -159,7 +199,7 @@ const seleccionarGasto = (id) =>{
               <option value="ocio">Ocio</option>
               <option value="suscripciones">Suscripciones</option>
           </select>
-        </div>
+        </div> -->
         <Gasto
           v-for = "gasto in gastosFiltrados"
           :key="gasto.id"
