@@ -1,5 +1,5 @@
 <script setup>
-import {  ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import Presupuesto from './components/Presupuesto.vue';
 import ControlPresupuesto from './components/ControlPresupuesto.vue';
 import icoNuevoGasto from './assets/img/nuevo-gasto.svg';
@@ -25,7 +25,14 @@ const gasto = reactive({
   fecha: Date.now()
 });
 
+
 const gastos = ref([]);
+const categoriaSeleccionada = ref('');
+
+const gastosFiltrados = computed(() => {
+  if (!categoriaSeleccionada.value) return gastos.value;
+  return gastos.value.filter(gasto => gasto.categoria === categoriaSeleccionada.value);
+});
 
 watch(gastos, () => {
   const totalGastado = gastos.value.reduce((total, gastos) => gastos.cantidad + total, 0);
@@ -79,6 +86,16 @@ const guardarGasto = ()=>{
 }
 
 
+const eliminarGasto = () => {
+  if(gasto.id){
+    const index = gastos.value.findIndex(item => item.id === gasto.id);
+    if(index !== -1) {
+      gastos.value.splice(index, 1);
+    }
+    ocultarModal();
+  }
+}
+
 const limpiarStateGasto =()=>{
   Object.assign(gasto, {
     nombre:'',
@@ -130,9 +147,21 @@ const seleccionarGasto = (id) =>{
 
     <div class="listado-gastos contenedor">
         <h2>{{ gastos.length > 0 ? 'Gastos': 'No hay gastos'}} </h2>
-        
+        <!-- Filtro de categoría -->
+        <div style="margin-bottom: 2rem;">
+          <label for="filtro-categoria" style="font-weight: bold;">Filtrar por Categoría:</label>
+          <select id="filtro-categoria" v-model="categoriaSeleccionada">
+              <option value="">Todas</option>
+              <option value="ahorro">Ahorro</option>
+              <option value="comida">Comida</option>
+              <option value="casa">Casa</option>
+              <option value="salud">Salud</option>
+              <option value="ocio">Ocio</option>
+              <option value="suscripciones">Suscripciones</option>
+          </select>
+        </div>
         <Gasto
-          v-for = "gasto in gastos"
+          v-for = "gasto in gastosFiltrados"
           :key="gasto.id"
           :gasto= "gasto"
           @seleccionar-gasto="seleccionarGasto"
@@ -150,6 +179,7 @@ const seleccionarGasto = (id) =>{
       v-if ="modal.mostrar"
       @ocultar-modal="ocultarModal"
       @guardar-gasto="guardarGasto"
+      @eliminar-gasto="eliminarGasto"
       :modal="modal"
       :disponible="disponible"
       :id="gasto.id"
@@ -246,4 +276,3 @@ header h1{
   color: var(--gris-oscuro)
 }
 </style>
-|

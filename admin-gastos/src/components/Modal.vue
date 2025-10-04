@@ -103,7 +103,7 @@
                 class="nuevo-gasto"
                 @submit.prevent="agregarGasto"
             >
-                <legend>Añadir Nuevo Gasto</legend>
+                <legend>{{ isEditando ? 'Editar Gasto' : 'Añadir Nuevo Gasto' }}</legend>
                 <Alert v-if="error">
                     {{error}}
                 </Alert>
@@ -145,13 +145,14 @@
                     </select>
                 </div>
 
-                <input type="submit" value="Añadir Gasto">
+                <input type="submit" :value="isEditando ? 'Editar' : 'Añadir Gasto'">
             </form>
 
             <button
                 type="button"
                 class="btnEliminar"
                 v-if="isEditando"
+                @click="$emit('eliminar-gasto')"
             >
                 Eliminar Gasto
             </button>
